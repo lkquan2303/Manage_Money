@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+    @State var isMoney = true
     var body: some View {
-        MoneySpendingView()
+        HomePageView()
     }
 }
 
