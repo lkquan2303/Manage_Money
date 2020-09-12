@@ -52,7 +52,6 @@ struct HomePageView: View {
                 HeaderView(nowDay: $nowDay, isMoney: $isPickMoney, isShowDayPicker: $isShowDayPicker)
                     .padding(.top, 20)
                 BuildListSpending()
-                
                 Spacer()
             }
             DayPickerView(nowDay: $nowDay, isShowTime: $isShowDayPicker)

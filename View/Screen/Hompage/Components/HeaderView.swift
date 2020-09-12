@@ -23,12 +23,6 @@ struct HeaderView: View {
     }
     var body: some View {
         ZStack{
-//            ZStack{
-//                isShowDayPicker ? Color.gray.opacity(0.3) : Color.clear
-//            }.onTapGesture {
-//                self.isShowDayPicker.toggle()
-//            }
-//            .edgesIgnoringSafeArea(.all)
             VStack{
                 HStack{
                     Text("Ngày")
@@ -37,7 +31,7 @@ struct HeaderView: View {
                         Button(action: {
                             self.nowDay.addTimeInterval(-86400)
                         }) {
-                            Image(systemName: "chevron.left")
+                            Images.arrowLeft
                         }
                         HStack{
                             Button(action: {
@@ -52,7 +46,7 @@ struct HeaderView: View {
                         Button(action: {
                             self.nowDay.addTimeInterval(86400)
                         }) {
-                            Image(systemName: "chevron.right")
+                            Images.arrowRight
                         }
                     }
                     Spacer()

@@ -7,12 +7,15 @@
 //
 
 import SwiftUI
-
+import Firebase
 //MVVM Model
 class ModelData: ObservableObject{
-    @Published var isShowSignUp = false
+    @Published var isSignUp = false
+    @Published var isLinkSend = false
     @Published var email = ""
     @Published var password = ""
     @Published var emailSignup = ""
-    @Published var passwordSignup = ""
+    @Published var passwordSignUp = ""
+    @Published var resetEmail = ""
+    @Published var rePasswordSignUp = ""
 }

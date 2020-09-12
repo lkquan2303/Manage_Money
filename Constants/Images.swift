@@ -10,6 +10,8 @@ import Foundation
 import SwiftUI
 
 struct Images {
+    
+    //List Spending
     static var exchange = Image("beer")
     static var cosmetics = Image("cosmetics")
     static var clothing = Image("clothing")
@@ -22,6 +24,12 @@ struct Images {
     static var education = Image("school")
     static var elecwater = Image("water-drop")
     static var wedding = Image("wedding-cake")
+    static var arrowLeft = Image(systemName: "chevron.left")
+    static var arrowRight = Image(systemName: "chevron.right")
+    
+    //Authen
+    static var person = "person"
+    static var lock = "lock"
 }
 struct ListSpendingCategory: Identifiable{
     var id = UUID()
