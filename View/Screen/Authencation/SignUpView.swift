@@ -10,9 +10,11 @@ import SwiftUI
 
 struct SignUpView: View {
     @Binding var isShowSignUp: Bool
-    @Environment(\.presentationMode) var presentationMode
     @State var model = ModelData()
-    var authenViewModel = AuthenViewModel()
+    @Binding var isShowLoading: Bool
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var session : AuthenSessionStore
+    @EnvironmentObject var userData : UserData
     var body: some View{
         ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)){
             VStack{
@@ -36,7 +38,17 @@ struct SignUpView: View {
                 .padding(.top)
                 
                 Button(action: {
-                    self.authenViewModel.registerUser(email: self.model.emailSignup, password: self.model.passwordSignUp, rePassword: self.model.rePasswordSignUp)
+                    self.isShowLoading.toggle()
+                    self.session.signUp(email: self.model.emailSignup, password: self.model.passwordSignUp) { (result, error) in
+                        if let error = error{
+                            print(error)
+                        }else{
+                            self.model.emailSignup = ""
+                            self.model.passwordSignUp = ""
+                            self.model.rePasswordSignUp = ""
+                        }
+                        
+                    }
                 }) {
                     Text("SIGNUP")
                         .foregroundColor(Color.orange)
@@ -52,7 +64,8 @@ struct SignUpView: View {
             }
             Button(action: {
                 withAnimation{
-                    self.isShowSignUp = false
+//                    self.isShowSignUp = false
+                    self.userData.isSignUp.toggle()
                 }                
             }) {
                 Images.arrowLeft

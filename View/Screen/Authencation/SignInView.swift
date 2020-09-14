@@ -7,15 +7,15 @@
 //
 
 import SwiftUI
-
+import Combine
 struct SignInView: View {
-    @State var model = ModelData()
-    @State var isShowSignUp = false
+    @State var model = UserData()
     @State var isLinkSend = false
-    @State var alert = false
     @State var isError = false
     @State var error = ""
-    var authenViewModel = AuthenViewModel()
+    @State var isShowLoading = false
+    @EnvironmentObject var session: AuthenSessionStore
+    @EnvironmentObject var userData: UserData
     var body: some View{
         NavigationView{
             ZStack{
@@ -31,15 +31,24 @@ struct SignInView: View {
                         Text("Your Money").font(.system(size: 30)).fontWeight(.bold).foregroundColor(Color(.yellow))
                     }.padding(.top)
                     VStack(spacing: 20){
-                        CustomTextField(image: Images.person, placeHolder: "Email", txt: $model.email)
-                        CustomTextField(image: Images.lock, placeHolder: "Password", txt: $model.password)
+                        CustomTextField(image: Images.person, placeHolder: "Email", txt: $userData.email)
+                        CustomTextField(image: Images.lock, placeHolder: "Password", txt: $userData.password)
                     }
                     .padding(.top)
                     .padding(.horizontal)
                     Button(action: {
-                        self.authenViewModel.authenLogin(email: self.model.email, password: self.model.password)
                         withAnimation {
-                            self.alert = self.authenViewModel.verifySignIn(email: self.model.email, password: self.model.password)
+                            self.isShowLoading = true
+                            self.session.signIn(email: self.userData.email, password: self.userData.password) { (auth, error) in
+                                if (error != nil) {
+                                    withAnimation {
+                                        self.userData.isAlert.toggle()
+                                        self.isShowLoading = false
+                                    }
+                                }else{
+//                                    self.isShowLoading = false
+                                }
+                            }
                         }
                     }) {
                         Text("SIGNIN")
@@ -56,8 +65,8 @@ struct SignInView: View {
                         Text("Don't have an account?").opacity(0.5)
                         Button(action: {
                             withAnimation{
-                                //                            self.isShowSignUp = true
-                                self.model.isSignUp = true
+//                                self.isShowSignUp = true
+                                self.userData.isSignUp = true
                             }
                         }) {
                             Text("Sign Up Now").foregroundColor(Color.white)
@@ -65,8 +74,7 @@ struct SignInView: View {
                     }.padding(.top, 8)
                     Spacer()
                     Button(action: {
-                        //                    self.model.resetPassword()
-                        //                    self.resetPassword()
+                        self.session.resetPassword()
                     }) {
                         Text("Forget Password?").foregroundColor(Color.white)
                     }
@@ -74,18 +82,24 @@ struct SignInView: View {
                 }
                 .background(LinearGradient(gradient: .init(colors: [.yellow, .orange]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all))
-                .alert(isPresented: $model.isLinkSend) {
+                .alert(isPresented: $userData.isLinkSend) {
                     Alert(title: Text("Message"), message: Text("Password Reset Link Has Been Sent."), dismissButton: .destructive(Text("OK")))
                 }
+//                ZStack{
+//                    LoadingPageView()
+//                }.offset(x: 0, y: self.isShowLoading ? 0 : UIScreen.main.bounds.height)
                 ZStack{
-                    SignUpView(isShowSignUp: $model.isSignUp)
-                }.offset(x: 0, y: self.isShowSignUp ? 0 : UIScreen.main.bounds.height)
-                if self.alert{
-                    ErrorView(alert: $alert)
+                    SignUpView(isShowSignUp: self.$userData.isSignUp, isShowLoading: $isShowLoading)
+                }.offset(x: 0, y: self.userData.isSignUp ? 0 : UIScreen.main.bounds.height)
+                if self.userData.isAlert{
+                    ErrorView(alert: self.$userData.isAlert)
+                }
+                if self.isShowLoading{
+                    LoadingPageView()
                 }
             }
-        .navigationBarTitle("")
-        .navigationBarHidden(true)
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
         }
         
     }

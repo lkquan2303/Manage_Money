@@ -26,7 +26,7 @@ struct Images {
     static var wedding = Image("wedding-cake")
     static var arrowLeft = Image(systemName: "chevron.left")
     static var arrowRight = Image(systemName: "chevron.right")
-    
+    static var loading = Image("loan")
     //Authen
     static var person = "person"
     static var lock = "lock"

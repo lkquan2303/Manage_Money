@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Firebase
+import Combine
 //MVVM Model
 class ModelData: ObservableObject{
     @Published var isSignUp = false

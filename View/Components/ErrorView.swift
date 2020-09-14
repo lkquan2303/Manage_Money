@@ -21,7 +21,7 @@ struct ErrorView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 25)
-                Text("Please fill full property")
+                Text("Email or Password  invalid!!!!")
                     .font(.system(size: 20))
                     .foregroundColor(Color.orange)
                     .padding(.top)

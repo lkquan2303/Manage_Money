@@ -9,9 +9,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var session: AuthenSessionStore
+    func getUser(){
+        session.listen()
+    }
     @State var isMoney = false
     var body: some View {
-        SignInView()
+        Group{
+            if(session.session != nil){
+                HomePageView()
+            }else{
+                SignInView()
+            }
+        }.onAppear(perform: getUser)
     }
 }
 
