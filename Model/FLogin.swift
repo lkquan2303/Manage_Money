@@ -20,3 +20,4 @@ class ModelData: ObservableObject{
     @Published var resetEmail = ""
     @Published var rePasswordSignUp = ""
 }
+

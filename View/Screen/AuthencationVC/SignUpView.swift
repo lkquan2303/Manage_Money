@@ -9,9 +9,7 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @Binding var isShowSignUp: Bool
     @State var model = ModelData()
-    @Binding var isShowLoading: Bool
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var session : AuthenSessionStore
     @EnvironmentObject var userData : UserData
@@ -38,7 +36,7 @@ struct SignUpView: View {
                 .padding(.top)
                 
                 Button(action: {
-                    self.isShowLoading.toggle()
+                    self.userData.isShowLoading.toggle()
                     self.session.signUp(email: self.model.emailSignup, password: self.model.passwordSignUp) { (result, error) in
                         if let error = error{
                             print(error)

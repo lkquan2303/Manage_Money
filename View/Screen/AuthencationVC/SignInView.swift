@@ -10,12 +10,10 @@ import SwiftUI
 import Combine
 struct SignInView: View {
     @State var model = UserData()
-    @State var isLinkSend = false
-    @State var isError = false
-    @State var error = ""
-    @State var isShowLoading = false
     @EnvironmentObject var session: AuthenSessionStore
     @EnvironmentObject var userData: UserData
+    var authenModel = AuthenViewModel(user: UserData())
+    var subscriptions = Set<AnyCancellable>()
     var body: some View{
         NavigationView{
             ZStack{
@@ -38,17 +36,18 @@ struct SignInView: View {
                     .padding(.horizontal)
                     Button(action: {
                         withAnimation {
-                            self.isShowLoading = true
-                            self.session.signIn(email: self.userData.email, password: self.userData.password) { (auth, error) in
-                                if (error != nil) {
-                                    withAnimation {
-                                        self.userData.isAlert.toggle()
-                                        self.isShowLoading = false
-                                    }
-                                }else{
-//                                    self.isShowLoading = false
-                                }
-                            }
+                            self.model.isShowLoading = true
+//                            self.session.signIn(email: self.userData.email, password: self.userData.password) { (auth, error) in
+//                                if (error != nil) {
+//                                    withAnimation {
+//                                        self.userData.isAlert.toggle()
+//                                        self.isShowLoading = false
+//                                    }
+//                                }else{
+//                                    //                                    self.isShowLoading = false
+//                                }
+//                            }
+                            self.authenModel.action.send(.gotoHome)
                         }
                     }) {
                         Text("SIGNIN")
@@ -65,7 +64,8 @@ struct SignInView: View {
                         Text("Don't have an account?").opacity(0.5)
                         Button(action: {
                             withAnimation{
-//                                self.isShowSignUp = true
+                                //                                self.isShowSignUp = true
+                                print(self.authenModel.name)
                                 self.userData.isSignUp = true
                             }
                         }) {
@@ -85,22 +85,21 @@ struct SignInView: View {
                 .alert(isPresented: $userData.isLinkSend) {
                     Alert(title: Text("Message"), message: Text("Password Reset Link Has Been Sent."), dismissButton: .destructive(Text("OK")))
                 }
-//                ZStack{
-//                    LoadingPageView()
-//                }.offset(x: 0, y: self.isShowLoading ? 0 : UIScreen.main.bounds.height)
+                //                ZStack{
+                //                    LoadingPageView()
+                //                }.offset(x: 0, y: self.isShowLoading ? 0 : UIScreen.main.bounds.height)
                 ZStack{
-                    SignUpView(isShowSignUp: self.$userData.isSignUp, isShowLoading: $isShowLoading)
+                    SignUpView()
                 }.offset(x: 0, y: self.userData.isSignUp ? 0 : UIScreen.main.bounds.height)
                 if self.userData.isAlert{
                     ErrorView(alert: self.$userData.isAlert)
                 }
-                if self.isShowLoading{
+                if self.model.isShowLoading{
                     LoadingPageView()
                 }
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
         }
-        
     }
 }

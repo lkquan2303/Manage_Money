@@ -11,8 +11,8 @@ import Foundation
 struct User{
     var userData = UserData()
     var uid: String
-    var email: String?
-    init(uid: String, email: String?) {
+    var email: String
+    init(uid: String, email: String) {
         self.uid = uid
         self.email = userData.email
     }
@@ -29,5 +29,11 @@ class UserData: ObservableObject{
     @Published var passwordSignUp = ""
     @Published var resetEmail = ""
     @Published var rePasswordSignUp = ""
+    @Published var isShowLoading = false
 }
 
+struct UserMVVM {
+    var name: String
+    var password: String
+    var isLogin: Bool
+}
