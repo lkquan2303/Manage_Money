@@ -19,6 +19,7 @@ struct User{
 }
 
 class UserData: ObservableObject{
+    static let shared = UserData()
     @Published var isAlert = false
     @Published var isError = false
     @Published var isSignUp = false
@@ -33,7 +34,7 @@ class UserData: ObservableObject{
 }
 
 struct UserMVVM {
-    var name: String
-    var password: String
-    var isLogin: Bool
+    var name: String = ""
+    var password: String = ""
+    var isLogin: Bool = true
 }

@@ -9,11 +9,10 @@
 import SwiftUI
 import Combine
 struct SignInView: View {
-    @State var model = UserData()
     @EnvironmentObject var session: AuthenSessionStore
-    @EnvironmentObject var userData: UserData
-    var authenModel = AuthenViewModel(user: UserData())
-    var subscriptions = Set<AnyCancellable>()
+    @ObservedObject var userData: UserData = .shared
+    @State var subscriptions = Set<AnyCancellable>()
+    @State var authenModel = AuthenViewModel()
     var body: some View{
         NavigationView{
             ZStack{
@@ -36,7 +35,8 @@ struct SignInView: View {
                     .padding(.horizontal)
                     Button(action: {
                         withAnimation {
-                            self.model.isShowLoading = true
+                            print("view \(self.authenModel.name.value)")
+                            self.userData.isShowLoading = true
 //                            self.session.signIn(email: self.userData.email, password: self.userData.password) { (auth, error) in
 //                                if (error != nil) {
 //                                    withAnimation {
@@ -47,6 +47,8 @@ struct SignInView: View {
 //                                    //                                    self.isShowLoading = false
 //                                }
 //                            }
+
+                            print("email\(self.userData.email)")
                             self.authenModel.action.send(.gotoHome)
                         }
                     }) {
@@ -65,7 +67,7 @@ struct SignInView: View {
                         Button(action: {
                             withAnimation{
                                 //                                self.isShowSignUp = true
-                                print(self.authenModel.name)
+                                print("view \(self.authenModel.name)")
                                 self.userData.isSignUp = true
                             }
                         }) {
@@ -94,9 +96,12 @@ struct SignInView: View {
                 if self.userData.isAlert{
                     ErrorView(alert: self.$userData.isAlert)
                 }
-                if self.model.isShowLoading{
+                if self.userData.isShowLoading{
                     LoadingPageView()
                 }
+            }
+            .onAppear{
+//                self.authenModel.name.assign(to: \.email, on: self).store(in: &self.subscriptions)
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)

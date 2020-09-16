@@ -9,8 +9,8 @@
 import Foundation
 import Combine
 import SwiftUI
-final class AuthenViewModel{
-    var user : UserData
+class AuthenViewModel: ObservableObject{
+    @ObservedObject var userData : UserData = .shared
     var subscriptions = Set<AnyCancellable>()
     var authenAction = AuthenSessionStore()
     let action = PassthroughSubject<Action, Never>()
@@ -18,14 +18,15 @@ final class AuthenViewModel{
     let name = CurrentValueSubject<String, Never>("")
     let password = CurrentValueSubject<String?, Never>(nil)
     let errorText = CurrentValueSubject<String?, Never>(nil)
-    init(user: UserData) {
-        self.user = user
+    
+    init() {
         state.sink(receiveValue: {[weak self] state in
             self?.processState(state)
-            }).store(in: &subscriptions)
+        }).store(in: &subscriptions)
         action.sink(receiveValue: { [weak self] action in
             self?.processAction(action)
         }).store(in: &subscriptions)
+        
     }
     enum State{
         case initial
@@ -38,8 +39,8 @@ final class AuthenViewModel{
     private func processState(_ state: State){
         switch state {
         case .initial:
-            name.value = user.email
-            password.value = user.password
+//            name.value = userData.email
+//            password.value = userData.password
             errorText.value = nil
         case .error(let message):
             errorText.value = message
@@ -49,16 +50,15 @@ final class AuthenViewModel{
         switch action {
         case .gotoHome:
             print("gotoHome")
-//            print(user.email)
-//            print(user.password)
-            print("hello" + name.value)
-            authenAction.signIn(email: user.email, password: user.password){ (auth, error) in
-                if (error != nil) {
-                    withAnimation {
-                    }
-                }else{
-                }
-            }
+            print("VM: \(userData.email)")
+            //            print("hello" + name.value)
+            //            authenAction.signIn(email: name.value, password: password.value ?? ""){ (auth, error) in
+            //                if (error != nil) {
+            //                    withAnimation {
+            //                    }
+            //                }else{
+            //                }
+        //            }
         case .gotoLogin:
             print("gotologin")
         }
